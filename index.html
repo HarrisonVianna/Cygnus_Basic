@@ -24,7 +24,7 @@
             display: none;
             width: 100%;
             height: 100%;
-            padding: 4rem;
+            padding: 1.5rem; /* Base padding for mobile */
             flex-direction: column;
             justify-content: center;
             align-items: center;
@@ -32,44 +32,40 @@
             opacity: 0;
             transition: opacity 0.6s ease-in-out;
             position: absolute;
+            overflow-y: auto; /* Allow scrolling on small screens */
         }
         .slide.active {
             display: flex;
             opacity: 1;
         }
         .slide-container {
-            width: 95vw;
-            height: 95vh;
-            max-width: 1200px;
-            max-height: 800px;
+            width: 100vw; /* Full width on mobile */
+            height: 100vh; /* Full height on mobile */
             background-color: #ffffff; /* bg-white */
-            border-radius: 1.5rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
             position: relative;
             overflow: hidden;
         }
         .slide-header h1 {
-            font-size: 2.5rem;
+            font-size: 1.75rem; /* Mobile font size */
             font-weight: 800;
             color: #111827; /* text-gray-900 */
             margin-bottom: 0.5rem;
         }
         .slide-header h2 {
-            font-size: 1.5rem;
+            font-size: 1.125rem; /* Mobile font size */
             font-weight: 500;
             color: #4b5563; /* text-gray-600 */
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
         .indicator-table {
             width: 100%;
-            max-width: 600px;
-            margin: 2rem auto;
+            margin: 1rem auto;
             border-collapse: collapse;
         }
         .indicator-table td {
-            padding: 1rem;
+            padding: 0.75rem;
             border-bottom: 1px solid #e5e7eb; /* border-gray-200 */
-            font-size: 1.125rem;
+            font-size: 1rem;
         }
         .indicator-table td:first-child {
             text-align: left;
@@ -86,8 +82,8 @@
         .chart-container {
             width: 100%;
             max-width: 700px;
-            height: 400px;
-            margin: 2rem auto;
+            height: 250px; /* Adjusted height for mobile */
+            margin: 1rem auto;
         }
         .nav-button {
             position: absolute;
@@ -97,9 +93,9 @@
             color: #374151;
             border: none;
             border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            font-size: 24px;
+            width: 40px;
+            height: 40px;
+            font-size: 20px;
             cursor: pointer;
             transition: background-color 0.3s;
             z-index: 10;
@@ -107,24 +103,24 @@
         .nav-button:hover {
             background-color: rgba(0, 0, 0, 0.1);
         }
-        #prevBtn { left: 20px; }
-        #nextBtn { right: 20px; }
+        #prevBtn { left: 10px; }
+        #nextBtn { right: 10px; }
         #slideCounter {
             position: absolute;
-            bottom: 20px;
-            right: 30px;
-            font-size: 1rem;
+            bottom: 10px;
+            right: 15px;
+            font-size: 0.875rem;
             color: #9ca3af; /* text-gray-400 */
             z-index: 10;
         }
         .risk-table {
             width: 100%;
-            max-width: 900px;
             text-align: left;
-            margin-top: 2rem;
+            margin-top: 1rem;
+            font-size: 0.875rem;
         }
         .risk-table th, .risk-table td {
-            padding: 1rem;
+            padding: 0.5rem;
             border: 1px solid #e5e7eb;
         }
         .risk-table th {
@@ -132,19 +128,43 @@
         }
         .cygnus-logo {
             font-weight: 800;
-            font-size: 6rem;
+            font-size: 4rem; /* Mobile font size */
             letter-spacing: -0.05em;
             color: #1f2937;
         }
         .cygnus-subtitle {
             font-weight: 500;
-            font-size: 1.75rem;
+            font-size: 1.25rem; /* Mobile font size */
             color: #f97316;
-            margin-top: -1.5rem;
+            margin-top: -1rem;
             letter-spacing: 0.1em;
         }
         .orange-highlight {
             color: #f97316;
+        }
+
+        /* Tablet and Desktop Styles */
+        @media (min-width: 768px) {
+            .slide-container {
+                width: 95vw;
+                height: 95vh;
+                max-width: 1200px;
+                max-height: 800px;
+                border-radius: 1.5rem;
+                box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+            }
+            .slide {
+                padding: 4rem;
+                overflow-y: hidden;
+            }
+            .slide-header h1 { font-size: 2.5rem; }
+            .slide-header h2 { font-size: 1.5rem; }
+            .cygnus-logo { font-size: 6rem; }
+            .cygnus-subtitle { font-size: 1.75rem; margin-top: -1.5rem; }
+            .chart-container { height: 400px; margin: 2rem auto; }
+            #prevBtn { left: 20px; }
+            #nextBtn { right: 20px; }
+            #slideCounter { bottom: 20px; right: 30px; font-size: 1rem; }
         }
     </style>
 </head>
@@ -155,9 +175,9 @@
         <div id="slide-0" class="slide">
             <div class="cygnus-logo">cygnus</div>
             <div class="cygnus-subtitle">ENERGIA RENOVÁVEL</div>
-            <div class="mt-16 text-center">
-                <h1 class="text-4xl font-bold text-gray-800">Análise de Viabilidade do Projeto</h1>
-                <p class="text-xl text-gray-500 mt-2">Resumo Executivo para Decisão de Investimento</p>
+            <div class="mt-8 md:mt-16 text-center">
+                <h1 class="text-2xl md:text-4xl font-bold text-gray-800">Análise de Viabilidade do Projeto</h1>
+                <p class="text-lg md:text-xl text-gray-500 mt-2">Resumo Executivo para Decisão de Investimento</p>
             </div>
         </div>
 
@@ -184,7 +204,7 @@
                 <h1>Detalhamento do Investimento (CAPEX)</h1>
                 <h2>O investimento de R$ 93,6 Milhões é estrategicamente alocado na infraestrutura industrial e agrícola.</h2>
             </div>
-            <div class="chart-container" style="height: 350px; max-width: 350px;">
+            <div class="chart-container" style="height: 300px; max-width: 300px; md:height: 350px; md:max-width: 350px;">
                 <canvas id="capexChart"></canvas>
             </div>
         </div>
@@ -217,7 +237,7 @@
                 <h1>Impostos Incidentes: Regime de Lucro Presumido</h1>
                 <h2>A escolha do Lucro Presumido otimiza a carga tributária na fase inicial do projeto.</h2>
             </div>
-            <ul class="text-left text-xl max-w-3xl space-y-4">
+            <ul class="text-left text-lg md:text-xl max-w-3xl space-y-4">
                 <li><strong class="orange-highlight">PIS/COFINS:</strong> 3,65% sobre a Receita Bruta.</li>
                 <li><strong class="orange-highlight">IRPJ/CSLL:</strong> 24% aplicados sobre uma base de presunção do lucro (8% e 12% da receita).</li>
                 <li><strong class="orange-highlight">Vantagem:</strong> Simplicidade e carga tributária previsível, sem a complexidade da apuração de créditos do Lucro Real.</li>
@@ -282,7 +302,7 @@
             <div class="chart-container">
                 <canvas id="monteCarloChart"></canvas>
             </div>
-            <p class="mt-4 text-xl">Existe <strong class="orange-highlight">78,5% de probabilidade</strong> de o projeto apresentar um <strong>VPL positivo</strong>.</p>
+            <p class="mt-4 text-lg md:text-xl">Existe <strong class="orange-highlight">78,5% de probabilidade</strong> de o projeto apresentar um <strong>VPL positivo</strong>.</p>
         </div>
         
         <!-- Slide 10: Conclusão -->
@@ -291,12 +311,12 @@
                 <h1>Conclusão e Recomendação Final</h1>
                 <h2>A análise confirma que o Projeto Cygnus é atraente, robusto e financeiramente viável.</h2>
             </div>
-             <ul class="text-left text-xl max-w-3xl space-y-4">
+             <ul class="text-left text-lg md:text-xl max-w-3xl space-y-4">
                 <li><strong class="orange-highlight">Retorno Superior:</strong> A TIR de 28,68% supera a TMA de 25%.</li>
                 <li><strong class="orange-highlight">Risco Quantificado:</strong> A probabilidade de sucesso de 78,5% oferece segurança estatística.</li>
                 <li><strong class="orange-highlight">Estratégia Clara:</strong> Os riscos são conhecidos e as estratégias de mitigação estão definidas.</li>
             </ul>
-            <p class="mt-8 text-2xl font-bold bg-orange-500/10 text-orange-600 px-6 py-3 rounded-lg">Recomendação: Aprovação do projeto e avanço para a próxima fase.</p>
+            <p class="mt-8 text-xl md:text-2xl font-bold bg-orange-500/10 text-orange-600 px-6 py-3 rounded-lg">Recomendação: Aprovação do projeto e avanço para a próxima fase.</p>
         </div>
 
 
@@ -355,7 +375,7 @@
         Chart.defaults.color = '#4b5563';
         Chart.defaults.borderColor = '#e5e7eb';
         Chart.defaults.font.family = "'Inter', 'sans-serif'";
-        Chart.defaults.font.size = 14;
+        Chart.defaults.font.size = 12;
         const orange_primary = '#f97316';
         const orange_secondary = '#fb923c';
 
