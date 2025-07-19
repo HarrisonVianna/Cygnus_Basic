@@ -10,21 +10,42 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
     <style>
+        :root {
+            /* Fallback for browsers that don't support env() */
+            --sab: 0; 
+            /* iOS Safe Area for bottom */
+            --sab: env(safe-area-inset-bottom);
+        }
+        
+        html, body {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            position: fixed;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6; /* bg-gray-100 */
-            color: #1f2937; /* text-gray-800 */
+            background-color: #f3f4f6;
+            color: #1f2937;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
+        }
+        .slide-container {
+            width: 100%;
+            height: 100%;
+            background-color: #ffffff;
+            position: relative;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
         .slide {
             display: none;
             width: 100%;
             height: 100%;
-            padding: 1.5rem; /* Base padding for mobile */
+            padding: 1.5rem 1.5rem calc(1.5rem + var(--sab)) 1.5rem; /* Add padding for safe area */
             flex-direction: column;
             justify-content: center;
             align-items: center;
@@ -32,57 +53,45 @@
             opacity: 0;
             transition: opacity 0.6s ease-in-out;
             position: absolute;
-            overflow-y: auto; /* Allow scrolling on small screens */
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
         }
         .slide.active {
             display: flex;
             opacity: 1;
         }
-        .slide-container {
-            width: 100vw; /* Full width on mobile */
-            height: 100vh; /* Full height on mobile */
-            background-color: #ffffff; /* bg-white */
-            position: relative;
-            overflow: hidden;
-        }
         .slide-header h1 {
-            font-size: 1.75rem; /* Mobile font size */
+            font-size: clamp(1.75rem, 5vw, 2.5rem); /* Fluid typography */
             font-weight: 800;
-            color: #111827; /* text-gray-900 */
+            color: #111827;
             margin-bottom: 0.5rem;
         }
         .slide-header h2 {
-            font-size: 1.125rem; /* Mobile font size */
+            font-size: clamp(1.1rem, 3vw, 1.5rem); /* Fluid typography */
             font-weight: 500;
-            color: #4b5563; /* text-gray-600 */
+            color: #4b5563;
             margin-bottom: 1.5rem;
+            max-width: 90%;
         }
         .indicator-table {
             width: 100%;
+            max-width: 600px;
             margin: 1rem auto;
             border-collapse: collapse;
         }
         .indicator-table td {
             padding: 0.75rem;
-            border-bottom: 1px solid #e5e7eb; /* border-gray-200 */
-            font-size: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: clamp(0.9rem, 2.5vw, 1.125rem);
         }
-        .indicator-table td:first-child {
-            text-align: left;
-            font-weight: 700;
-        }
-        .indicator-table td:last-child {
-            text-align: right;
-            font-weight: 700;
-            color: #f97316; /* text-orange-500 */
-        }
-        .indicator-table tr:last-child td {
-            border-bottom: none;
-        }
+        .indicator-table td:first-child { text-align: left; font-weight: 700; }
+        .indicator-table td:last-child { text-align: right; font-weight: 700; color: #10b981; }
+        .indicator-table tr:last-child td { border-bottom: none; }
+        
         .chart-container {
             width: 100%;
             max-width: 700px;
-            height: 250px; /* Adjusted height for mobile */
+            min-height: 280px; /* Use min-height for flexibility */
             margin: 1rem auto;
         }
         .nav-button {
@@ -93,58 +102,52 @@
             color: #374151;
             border: none;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            font-size: 20px;
+            width: 44px;
+            height: 44px;
+            font-size: 22px;
             cursor: pointer;
             transition: background-color 0.3s;
             z-index: 10;
         }
-        .nav-button:hover {
-            background-color: rgba(0, 0, 0, 0.1);
-        }
+        .nav-button:hover { background-color: rgba(0, 0, 0, 0.1); }
         #prevBtn { left: 10px; }
         #nextBtn { right: 10px; }
+        
         #slideCounter {
             position: absolute;
-            bottom: 10px;
+            bottom: calc(10px + var(--sab)); /* Adjust for safe area */
             right: 15px;
             font-size: 0.875rem;
-            color: #9ca3af; /* text-gray-400 */
+            color: #9ca3af;
             z-index: 10;
         }
         .risk-table {
             width: 100%;
             text-align: left;
             margin-top: 1rem;
-            font-size: 0.875rem;
+            font-size: 0.8rem;
         }
-        .risk-table th, .risk-table td {
-            padding: 0.5rem;
-            border: 1px solid #e5e7eb;
-        }
-        .risk-table th {
-            background-color: #f3f4f6;
-        }
+        .risk-table th, .risk-table td { padding: 0.5rem; border: 1px solid #e5e7eb; }
+        .risk-table th { background-color: #f3f4f6; }
+        
         .cygnus-logo {
             font-weight: 800;
-            font-size: 4rem; /* Mobile font size */
+            font-size: clamp(4rem, 15vw, 6rem);
             letter-spacing: -0.05em;
             color: #1f2937;
         }
         .cygnus-subtitle {
             font-weight: 500;
-            font-size: 1.25rem; /* Mobile font size */
+            font-size: clamp(1.25rem, 4vw, 1.75rem);
             color: #f97316;
             margin-top: -1rem;
             letter-spacing: 0.1em;
         }
-        .orange-highlight {
-            color: #f97316;
-        }
+        .highlight { color: #f97316; } /* Orange for brand consistency */
+        .green-highlight { color: #10b981; } /* Green for positive indicators */
 
-        /* Tablet and Desktop Styles */
-        @media (min-width: 768px) {
+        /* Desktop Styles */
+        @media (min-width: 1024px) {
             .slide-container {
                 width: 95vw;
                 height: 95vh;
@@ -157,14 +160,11 @@
                 padding: 4rem;
                 overflow-y: hidden;
             }
-            .slide-header h1 { font-size: 2.5rem; }
-            .slide-header h2 { font-size: 1.5rem; }
-            .cygnus-logo { font-size: 6rem; }
-            .cygnus-subtitle { font-size: 1.75rem; margin-top: -1.5rem; }
-            .chart-container { height: 400px; margin: 2rem auto; }
+            .chart-container { min-height: 400px; margin: 2rem auto; }
             #prevBtn { left: 20px; }
             #nextBtn { right: 20px; }
             #slideCounter { bottom: 20px; right: 30px; font-size: 1rem; }
+            .risk-table { font-size: 1rem; }
         }
     </style>
 </head>
@@ -172,7 +172,7 @@
 
     <div class="slide-container">
         <!-- Slide 0: Capa -->
-        <div id="slide-0" class="slide">
+        <div id="slide-0" class="slide active">
             <div class="cygnus-logo">cygnus</div>
             <div class="cygnus-subtitle">ENERGIA RENOVÁVEL</div>
             <div class="mt-8 md:mt-16 text-center">
@@ -189,11 +189,11 @@
             </div>
             <table class="indicator-table">
                 <tbody>
-                    <tr><td>Investimento Total (CAPEX)</td><td>R$ 93,60 Milhões</td></tr>
-                    <tr><td>Valor Presente Líquido (VPL)</td><td>+ R$ 10,93 Milhões</td></tr>
-                    <tr><td>Taxa Interna de Retorno (TIR)</td><td>28,68% <span class="text-gray-500 text-base">(vs. TMA de 25%)</span></td></tr>
-                    <tr><td>Payback Descontado</td><td>6,58 Anos</td></tr>
-                    <tr><td>Probabilidade de Sucesso (VPL>0)</td><td>78,5%</td></tr>
+                    <tr><td>Investimento Total (CAPEX)</td><td class="highlight">R$ 93,60 Milhões</td></tr>
+                    <tr><td>Valor Presente Líquido (VPL)</td><td class="green-highlight">+ R$ 10,93 Milhões</td></tr>
+                    <tr><td>Taxa Interna de Retorno (TIR)</td><td class="green-highlight">28,68% <span class="text-gray-500 text-base">(vs. TMA de 25%)</span></td></tr>
+                    <tr><td>Payback Descontado</td><td class="green-highlight">6,58 Anos</td></tr>
+                    <tr><td>Probabilidade de Sucesso (VPL>0)</td><td class="green-highlight">78,5%</td></tr>
                 </tbody>
             </table>
         </div>
@@ -204,7 +204,7 @@
                 <h1>Detalhamento do Investimento (CAPEX)</h1>
                 <h2>O investimento de R$ 93,6 Milhões é estrategicamente alocado na infraestrutura industrial e agrícola.</h2>
             </div>
-            <div class="chart-container" style="height: 300px; max-width: 300px; md:height: 350px; md:max-width: 350px;">
+            <div class="chart-container" style="max-width: 350px;">
                 <canvas id="capexChart"></canvas>
             </div>
         </div>
@@ -238,9 +238,9 @@
                 <h2>A escolha do Lucro Presumido otimiza a carga tributária na fase inicial do projeto.</h2>
             </div>
             <ul class="text-left text-lg md:text-xl max-w-3xl space-y-4">
-                <li><strong class="orange-highlight">PIS/COFINS:</strong> 3,65% sobre a Receita Bruta.</li>
-                <li><strong class="orange-highlight">IRPJ/CSLL:</strong> 24% aplicados sobre uma base de presunção do lucro (8% e 12% da receita).</li>
-                <li><strong class="orange-highlight">Vantagem:</strong> Simplicidade e carga tributária previsível, sem a complexidade da apuração de créditos do Lucro Real.</li>
+                <li><strong class="highlight">PIS/COFINS:</strong> 3,65% sobre a Receita Bruta.</li>
+                <li><strong class="highlight">IRPJ/CSLL:</strong> 24% aplicados sobre uma base de presunção do lucro (8% e 12% da receita).</li>
+                <li><strong class="highlight">Vantagem:</strong> Simplicidade e carga tributária previsível.</li>
             </ul>
         </div>
         
@@ -272,11 +272,11 @@
                     </tr>
                     <tr>
                         <td><strong>Operacional (Safra/Planta)</strong></td>
-                        <td><strong>Sistema de Irrigação</strong>, <strong>Silagem</strong> para estoque e seleção de <strong>fornecedores com tecnologia comprovada</strong>.</td>
+                        <td><strong>Sistema de Irrigação</strong>, <strong>Silagem</strong> e seleção de <strong>fornecedores com tecnologia comprovada</strong>.</td>
                     </tr>
                     <tr>
                         <td><strong>Regulatório (Leis/Impostos)</strong></td>
-                        <td><strong>Monitoramento contínuo</strong> do cenário político/regulatório e operação com <strong>excelência em compliance</strong>.</td>
+                        <td><strong>Monitoramento contínuo</strong> e operação com <strong>excelência em compliance</strong>.</td>
                     </tr>
                 </tbody>
             </table>
@@ -302,7 +302,7 @@
             <div class="chart-container">
                 <canvas id="monteCarloChart"></canvas>
             </div>
-            <p class="mt-4 text-lg md:text-xl">Existe <strong class="orange-highlight">78,5% de probabilidade</strong> de o projeto apresentar um <strong>VPL positivo</strong>.</p>
+            <p class="mt-4 text-lg md:text-xl">Existe <strong class="green-highlight">78,5% de probabilidade</strong> de o projeto apresentar um <strong>VPL positivo</strong>.</p>
         </div>
         
         <!-- Slide 10: Conclusão -->
@@ -312,13 +312,12 @@
                 <h2>A análise confirma que o Projeto Cygnus é atraente, robusto e financeiramente viável.</h2>
             </div>
              <ul class="text-left text-lg md:text-xl max-w-3xl space-y-4">
-                <li><strong class="orange-highlight">Retorno Superior:</strong> A TIR de 28,68% supera a TMA de 25%.</li>
-                <li><strong class="orange-highlight">Risco Quantificado:</strong> A probabilidade de sucesso de 78,5% oferece segurança estatística.</li>
-                <li><strong class="orange-highlight">Estratégia Clara:</strong> Os riscos são conhecidos e as estratégias de mitigação estão definidas.</li>
+                <li><strong class="green-highlight">Retorno Superior:</strong> A TIR de 28,68% supera a TMA de 25%.</li>
+                <li><strong class="green-highlight">Risco Quantificado:</strong> A probabilidade de sucesso de 78,5% oferece segurança estatística.</li>
+                <li><strong class="highlight">Estratégia Clara:</strong> Os riscos são conhecidos e as estratégias de mitigação estão definidas.</li>
             </ul>
-            <p class="mt-8 text-xl md:text-2xl font-bold bg-orange-500/10 text-orange-600 px-6 py-3 rounded-lg">Recomendação: Aprovação do projeto e avanço para a próxima fase.</p>
+            <p class="mt-8 text-xl md:text-2xl font-bold bg-emerald-500/10 text-emerald-600 px-6 py-3 rounded-lg">Recomendação: Aprovação do projeto.</p>
         </div>
-
 
         <!-- Navigation -->
         <button id="prevBtn" class="nav-button">&#10094;</button>
@@ -330,6 +329,7 @@
         let currentSlide = 0;
         const totalSlides = 11;
         const slideCounter = document.getElementById('slideCounter');
+        const charts = {};
 
         function showSlide(n) {
             const slides = document.querySelectorAll('.slide');
@@ -339,6 +339,10 @@
                 newSlide.classList.add('active');
             }
             updateCounter();
+            // Lazy load charts
+            if (n > 0 && !charts[`chart${n}`]) {
+                createChart(n);
+            }
         }
 
         function changeSlide(n) {
@@ -377,160 +381,111 @@
         Chart.defaults.font.family = "'Inter', 'sans-serif'";
         Chart.defaults.font.size = 12;
         const orange_primary = '#f97316';
-        const orange_secondary = '#fb923c';
+        const green_primary = '#10b981';
+        const green_secondary = '#34d399';
+        const red_negative = '#ef4444';
+
 
         // --- Criação dos Gráficos ---
-        
-        // Gráfico 2: CAPEX
-        const capexCtx = document.getElementById('capexChart').getContext('2d');
-        new Chart(capexCtx, {
-            type: 'doughnut',
-            data: {
-                labels: ['CAPEX Industrial', 'CAPEX Agrícola'],
-                datasets: [{
-                    data: [83.75, 9.85],
-                    backgroundColor: [orange_primary, orange_secondary],
-                    borderColor: '#ffffff',
-                    borderWidth: 4,
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { position: 'bottom' },
-                    tooltip: { callbacks: { label: (context) => `${context.label}: R$ ${context.raw} Milhões` } }
-                }
-            }
-        });
-
-        // Gráfico 3: OPEX
-        const opexCtx = document.getElementById('opexChart').getContext('2d');
-        new Chart(opexCtx, {
-            type: 'bar',
-            data: {
-                labels: ['Custos Fixos', 'Custos Variáveis'],
-                datasets: [{
-                    label: 'OPEX (R$ Milhões)',
-                    data: [6.34, 6.04],
-                    backgroundColor: [orange_primary, orange_secondary],
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                indexAxis: 'y',
-                plugins: { legend: { display: false } },
-                scales: { x: { grid: { color: '#e5e7eb' } }, y: { grid: { display: false } } }
-            }
-        });
-
-        // Gráfico 4: Receitas
-        const revenueCtx = document.getElementById('revenueChart').getContext('2d');
-        new Chart(revenueCtx, {
-            type: 'line',
-            data: {
-                labels: ['Ano 1', 'Ano 2', 'Ano 3', 'Ano 4', 'Ano 5'],
-                datasets: [
-                    { label: 'Metano', data: [29.2, 30.7, 32.2, 33.9, 35.5], backgroundColor: 'rgba(249, 115, 22, 0.2)', borderColor: orange_primary, fill: true, tension: 0.3 },
-                    { label: 'CO2', data: [1.0, 1.2, 1.5, 1.7, 2.0], backgroundColor: 'rgba(251, 146, 60, 0.2)', borderColor: orange_secondary, fill: true, tension: 0.3 },
-                    { label: 'CBios', data: [0.82, 0.86, 0.91, 0.95, 0.99], backgroundColor: 'rgba(253, 186, 116, 0.2)', borderColor: '#fdba74', fill: true, tension: 0.3 }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { tooltip: { mode: 'index', intersect: false } },
-                scales: { 
-                    y: { stacked: true, title: { display: true, text: 'Receita (R$ Milhões)'} },
-                    x: { stacked: true }
-                }
-            }
-        });
-        
-        // Gráfico 6: FCFF
-        const fcffCtx = document.getElementById('fcffChart').getContext('2d');
-        const fcffLabels = ['Ano 0', '1', '2', '3', '4', '5', '6', '7'];
-        const fcffData = [-93.6, 15.7, 16.7, 17.7, 18.7, 19.8, 20.9, 22.1];
-        const cumulativeFcffData = fcffData.reduce((acc, val, i) => {
-            acc.push((acc[i-1] || 0) + val);
-            return acc;
-        }, []);
-        new Chart(fcffCtx, {
-            type: 'bar',
-            data: {
-                labels: fcffLabels,
-                datasets: [
-                    {
-                        label: 'Fluxo de Caixa Livre Anual',
-                        data: fcffData,
-                        backgroundColor: (context) => context.raw < 0 ? '#ef4444' : orange_secondary,
-                        order: 1
-                    },
-                    {
-                        label: 'Fluxo de Caixa Acumulado',
-                        data: cumulativeFcffData,
+        function createChart(slideNumber) {
+            let ctx;
+            let config;
+            
+            switch(slideNumber) {
+                case 2:
+                    ctx = document.getElementById('capexChart').getContext('2d');
+                    config = {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['CAPEX Industrial', 'CAPEX Agrícola'],
+                            datasets: [{
+                                data: [83.75, 9.85],
+                                backgroundColor: [orange_primary, green_primary],
+                                borderColor: '#ffffff',
+                                borderWidth: 4,
+                            }]
+                        },
+                        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' }, tooltip: { callbacks: { label: (context) => `${context.label}: R$ ${context.raw} Milhões` } } } }
+                    };
+                    break;
+                case 3:
+                     ctx = document.getElementById('opexChart').getContext('2d');
+                     config = {
+                        type: 'bar',
+                        data: {
+                            labels: ['Custos Fixos', 'Custos Variáveis'],
+                            datasets: [{ label: 'OPEX (R$ Milhões)', data: [6.34, 6.04], backgroundColor: [orange_primary, green_primary] }]
+                        },
+                        options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { grid: { color: '#e5e7eb' } }, y: { grid: { display: false } } } }
+                     };
+                     break;
+                case 4:
+                    ctx = document.getElementById('revenueChart').getContext('2d');
+                    config = {
                         type: 'line',
-                        borderColor: orange_primary,
-                        backgroundColor: orange_primary,
-                        tension: 0.1,
-                        order: 0
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: { y: { title: { display: true, text: 'Valor (R$ Milhões)' } } }
+                        data: {
+                            labels: ['Ano 1', 'Ano 2', 'Ano 3', 'Ano 4', 'Ano 5'],
+                            datasets: [
+                                { label: 'Metano', data: [29.2, 30.7, 32.2, 33.9, 35.5], backgroundColor: 'rgba(249, 115, 22, 0.2)', borderColor: orange_primary, fill: true, tension: 0.3 },
+                                { label: 'CO2', data: [1.0, 1.2, 1.5, 1.7, 2.0], backgroundColor: 'rgba(16, 185, 129, 0.2)', borderColor: green_primary, fill: true, tension: 0.3 },
+                                { label: 'CBios', data: [0.82, 0.86, 0.91, 0.95, 0.99], backgroundColor: 'rgba(52, 211, 153, 0.2)', borderColor: green_secondary, fill: true, tension: 0.3 }
+                            ]
+                        },
+                        options: { responsive: true, maintainAspectRatio: false, plugins: { tooltip: { mode: 'index', intersect: false } }, scales: { y: { stacked: true, title: { display: true, text: 'Receita (R$ Milhões)'} }, x: { stacked: true } } }
+                    };
+                    break;
+                case 6:
+                    ctx = document.getElementById('fcffChart').getContext('2d');
+                    const fcffLabels = ['Ano 0', '1', '2', '3', '4', '5', '6', '7'];
+                    const fcffData = [-93.6, 15.7, 16.7, 17.7, 18.7, 19.8, 20.9, 22.1];
+                    const cumulativeFcffData = fcffData.reduce((acc, val, i) => { acc.push((acc[i-1] || 0) + val); return acc; }, []);
+                    config = {
+                        type: 'bar',
+                        data: {
+                            labels: fcffLabels,
+                            datasets: [
+                                { label: 'Fluxo de Caixa Livre Anual', data: fcffData, backgroundColor: (context) => context.raw < 0 ? red_negative : green_secondary, order: 1 },
+                                { label: 'Fluxo de Caixa Acumulado', data: cumulativeFcffData, type: 'line', borderColor: orange_primary, backgroundColor: orange_primary, tension: 0.1, order: 0 }
+                            ]
+                        },
+                        options: { responsive: true, maintainAspectRatio: false, scales: { y: { title: { display: true, text: 'Valor (R$ Milhões)' } } } }
+                    };
+                    break;
+                case 8:
+                    ctx = document.getElementById('sensitivityChart').getContext('2d');
+                    config = {
+                        type: 'bar',
+                        data: {
+                            labels: ['Preço do Metano', 'CAPEX Total'],
+                            datasets: [
+                                { label: 'Impacto Positivo (+10%)', data: [11.33, 10.33], backgroundColor: green_secondary },
+                                { label: 'Impacto Negativo (-10%)', data: [-11.33, -10.33], backgroundColor: red_negative }
+                            ]
+                        },
+                        options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true, title: { display: true, text: 'Variação no VPL (R$ Milhões)'} }, y: { stacked: true } } }
+                    };
+                    break;
+                case 9:
+                    ctx = document.getElementById('monteCarloChart').getContext('2d');
+                    const monteCarloLabels = ['-10M', '-5M', '0', '5M', '10M', '15M', '20M', '25M', '30M'];
+                    const monteCarloData = [2, 5, 15, 25, 30, 15, 5, 2, 1];
+                    config = {
+                        type: 'bar',
+                        data: {
+                            labels: monteCarloLabels,
+                            datasets: [{ label: 'Frequência de Resultados de VPL', data: monteCarloData, backgroundColor: green_secondary, barPercentage: 1, categoryPercentage: 1 }]
+                        },
+                        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { title: { display: true, text: 'VPL (R$ Milhões)'} }, y: { display: false } } }
+                    };
+                    break;
+                default:
+                    return;
             }
-        });
-
-        // Gráfico 8: Sensibilidade
-        const sensitivityCtx = document.getElementById('sensitivityChart').getContext('2d');
-        new Chart(sensitivityCtx, {
-            type: 'bar',
-            data: {
-                labels: ['Preço do Metano', 'CAPEX Total'],
-                datasets: [
-                    { label: 'Impacto Positivo (+10%)', data: [11.33, 10.33], backgroundColor: orange_secondary },
-                    { label: 'Impacto Negativo (-10%)', data: [-11.33, -10.33], backgroundColor: '#ef4444' }
-                ]
-            },
-            options: {
-                indexAxis: 'y',
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: { x: { stacked: true, title: { display: true, text: 'Variação no VPL (R$ Milhões)'} }, y: { stacked: true } }
+            
+            if (ctx) {
+                charts[`chart${slideNumber}`] = new Chart(ctx, config);
             }
-        });
-
-        // Gráfico 9: Monte Carlo
-        const monteCarloCtx = document.getElementById('monteCarloChart').getContext('2d');
-        const monteCarloLabels = ['-10M', '-5M', '0', '5M', '10M', '15M', '20M', '25M', '30M'];
-        const monteCarloData = [2, 5, 15, 25, 30, 15, 5, 2, 1]; // Dados simulados para visualização
-        new Chart(monteCarloCtx, {
-            type: 'bar',
-            data: {
-                labels: monteCarloLabels,
-                datasets: [{
-                    label: 'Frequência de Resultados de VPL',
-                    data: monteCarloData,
-                    backgroundColor: orange_secondary,
-                    barPercentage: 1,
-                    categoryPercentage: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: { 
-                    x: { title: { display: true, text: 'VPL (R$ Milhões)'} },
-                    y: { display: false }
-                }
-            }
-        });
-
+        }
 
         // Iniciar a apresentação
         showSlide(currentSlide);
